@@ -18,5 +18,6 @@
       "psr-4": {
         "Igorwanbarros\\Php2HtmlLaravel\\": "src/"
       }
-  }
+  },
+  "minimum-stability": "stable"
 }
