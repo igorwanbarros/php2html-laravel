@@ -128,6 +128,19 @@ class FormViewLaravel extends FormView
     }
 
 
+    public function search()
+    {
+        $this->action = str_replace('/salvar', '', $this->action);
+        $this->setMethod('GET');
+
+        $this->submitSave = ButtonField::create('submit', '', ' Pesquisar')
+            ->addAttribute('class', 'btn btn-default fa fa-search')
+            ->setType('submit');
+
+        return $this;
+    }
+
+
     public function render($template = null)
     {
         if ($this->submitSave) {
