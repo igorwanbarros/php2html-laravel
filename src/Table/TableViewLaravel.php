@@ -7,7 +7,9 @@ use Igorwanbarros\Php2Html\Table\TableView;
 
 class TableViewLaravel extends TableView
 {
-    protected $template = 'templates/semantic/table.php';
+
+    protected $paginate = 10;
+
 
     public function __construct(array $headers, $collection = null)
     {
@@ -22,11 +24,24 @@ class TableViewLaravel extends TableView
 
     public function render($template = null)
     {
-        $this->collection = $this->collection->paginate(10);
-        $paginator = view('html-element.paginator')->with('paginator', $this->collection);
+        $this->collection = $this->collection->paginate($this->paginate);
+        $paginator = new TablePagination($this->collection);
 
         $this->setPaginator($paginator->render());
 
         return parent::render($template);
+    }
+
+
+    public function getPaginate()
+    {
+        return $this->paginate;
+    }
+
+
+    public function setPaginate($paginate)
+    {
+        $this->paginate = $paginate;
+        return $this;
     }
 }
