@@ -128,9 +128,9 @@ class FormViewLaravel extends FormView
     }
 
 
-    public function search()
+    public function search($action = null)
     {
-        $this->action = str_replace('/salvar', '', $this->action);
+        $this->action = $action ?: str_replace(['/salvar', '/store'], '', $this->action);
         $this->setMethod('GET');
 
         $this->submitSave = ButtonField::create('submit', '', ' Pesquisar')
