@@ -24,6 +24,8 @@ class FormViewLaravel extends FormView
 
     protected $modelClass;
 
+    protected $rules = [];
+
     protected $tableClassReferences = [
         //Strings
         'char'          => TextField::class,
@@ -154,5 +156,11 @@ class FormViewLaravel extends FormView
         }
 
         return parent::render($template);
+    }
+
+
+    public function getRules()
+    {
+        return $this->rules;
     }
 }

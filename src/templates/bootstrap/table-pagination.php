@@ -1,12 +1,14 @@
 <?php
 $link_limit = 8;
+$queryString = app('request')->getQueryString();
+$url = $queryString ? "?{$queryString}&" : '?';
 ?>
 
 <?php if ($paginator->lastPage() > 1): ?>
 <div class="text-center">
     <ul class="pagination">
         <li class="<?php echo ($paginator->currentPage() == 1) ? 'disabled' : '' ?>">
-            <a href="<?php echo $paginator->url(1) ?>">
+            <a href="<?php echo url($url . "page=1") ?>">
                 <i class="fa fa-angle-left"></i>
             </a>
         </li>
@@ -25,12 +27,12 @@ $link_limit = 8;
         ?>
         <?php if ($from < $i && $i < $to): ?>
         <li class="<?php echo ($paginator->currentPage() == $i) ? 'active' : '' ?>">
-            <a href="<?php echo $paginator->url($i) ?>"><?php echo $i ?></a>
+            <a href="<?php echo url($url . "page={$i}") ?>"><?php echo $i ?></a>
         </li>
         <?php endif;?>
     <?php endfor;?>
         <li class="<?php echo ($paginator->currentPage() == $paginator->lastPage()) ? 'disabled' : '' ?>">
-            <a href="<?php echo $paginator->url($paginator->lastPage()) ?>">
+            <a href="<?php echo url($url . "page={$paginator->lastPage()}") ?>">
                 <i class="fa fa-angle-right"></i>
             </a>
         </li>
