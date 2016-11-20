@@ -16,6 +16,8 @@ use Igorwanbarros\Php2HtmlLaravel\Form\Fields\TextAreaField;
 class FormViewLaravel extends FormView
 {
 
+    protected $template = '/../templates/%s/form-laravel.php';
+
     protected $csrfToken = true;
 
     protected $submitSave = true;
@@ -80,8 +82,20 @@ class FormViewLaravel extends FormView
             $this->addField(HiddenField::create('_token', '', csrf_token()));
         }
 
-        parent::__construct($action, 'GET', []);
+        $this->beforeCreate();
+
+        parent::__construct($action, 'POST', []);
+
+        $this->afterCreate();
+
+        $this->setBasePath(__DIR__);
     }
+
+
+    public function beforeCreate() {}
+
+
+    public function afterCreate() {}
 
 
     public function toStart()
@@ -118,11 +132,15 @@ class FormViewLaravel extends FormView
 
             if ($col->CHARACTER_MAXIMUM_LENGTH > 0) {
                 $field->addAttribute('maxlength', $col->CHARACTER_MAXIMUM_LENGTH);
-                $field->addRule("|max:{$col->CHARACTER_MAXIMUM_LENGTH}");
+                $field->addRule("max:{$col->CHARACTER_MAXIMUM_LENGTH}|");
             }
 
             if ($col->IS_NULLABLE == 'NO') {
-                $field->addRule('|required');
+                $field->addRule('required|');
+            }
+
+            if (strpos($col->COLUMN_NAME, 'email') !== false) {
+                $field->addRule('email|');
             }
 
             $this->addField($field);
@@ -161,6 +179,28 @@ class FormViewLaravel extends FormView
 
     public function getRules()
     {
+        foreach ($this->fields as $field) {
+            $rules = $field->getRules();
+
+            if ($rules) {
+                $rules = strrpos($rules, '|') !== false
+                    ? substr($rules, 0, -1)
+                    : $rules;
+
+                $this->rules[$field->getName()] = $rules;
+            }
+        }
+
         return $this->rules;
+    }
+
+
+    public function setAction($action)
+    {
+        if (strpos($action, 'http') === false) {
+            $action = url($action);
+        }
+
+        return parent::setAction($action);
     }
 }
