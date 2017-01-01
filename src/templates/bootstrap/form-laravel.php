@@ -17,7 +17,7 @@
             <?php if ($field->getType() == 'submit'): ?>
             <div class="col-sm-12">
             <?php else: ?>
-            <?php $fieldError = $errors ? $errors->has($field->getName()) : false; ?>
+            <?php $fieldError = isset($errors) && $errors ? $errors->has($field->getName()) : false; ?>
             <div class="form-group col-sm-<?php echo ($field->getSize() ?: 4) . ($fieldError ? ' has-error' : '')?>">
                 <label for="<?php echo $field->getId(); ?>">
                     <?php echo $field->getLabel(); ?>
@@ -27,7 +27,7 @@
 
                 <?php echo $field; ?>
 
-            <?php if ($fieldError):?>
+            <?php if (isset($fieldError) && $fieldError):?>
                 <div class="list-error">
                 <?php foreach ($errors->get($field->getName()) as $error):?>
                     <span><?php echo $error;?></span>

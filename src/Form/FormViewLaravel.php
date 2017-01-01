@@ -3,9 +3,11 @@
 namespace Igorwanbarros\Php2HtmlLaravel\Form;
 
 use Igorwanbarros\Php2Html\Form\FormView;
+use Igorwanbarros\BaseLaravel\Models\BaseModel;
 use Igorwanbarros\Php2HtmlLaravel\Form\Fields\DateField;
 use Igorwanbarros\Php2HtmlLaravel\Form\Fields\TextField;
 use Igorwanbarros\Php2HtmlLaravel\Form\Fields\TimeField;
+use Igorwanbarros\Php2HtmlLaravel\Form\Fields\SelectField;
 use Igorwanbarros\Php2HtmlLaravel\Form\Fields\ButtonField;
 use Igorwanbarros\Php2HtmlLaravel\Form\Fields\HiddenField;
 use Igorwanbarros\Php2HtmlLaravel\Form\Fields\NumberField;
@@ -38,6 +40,7 @@ class FormViewLaravel extends FormView
         'longtext'      => TextAreaField::class,
         'binary'        => TextAreaField::class,
         'varbinary'     => TextAreaField::class,
+        'enum'          => SelectField::class,
         //Numeric
         'bit'           => CheckboxField::class,
         'tinyint'       => NumberField::class,
@@ -74,7 +77,7 @@ class FormViewLaravel extends FormView
     ];
 
 
-    public function __construct($action, $modelClass)
+    public function __construct($action, $modelClass = null)
     {
         $this->modelClass = $modelClass;
 
@@ -110,7 +113,17 @@ class FormViewLaravel extends FormView
 
     protected function _createFieldsFromDatabase()
     {
+        if (!$this->modelClass) {
+            return;
+        }
+
         $class = $this->modelClass;
+        $model = new $class;
+
+        if (!($model instanceof BaseModel)) {
+            return;
+        }
+
         $schema = $class::getSchema();
 
         foreach ($schema as $col) {
@@ -119,6 +132,7 @@ class FormViewLaravel extends FormView
             }
 
             $field = TextField::class;
+            $value = null;
 
             if (array_key_exists($col->DATA_TYPE, $this->tableClassReferences)) {
                 $field = $this->tableClassReferences[$col->DATA_TYPE];
@@ -128,15 +142,24 @@ class FormViewLaravel extends FormView
                 $field = $this->convertTypeFieldsByName[$col->COLUMN_NAME];
             }
 
-            $field = $field::create($col->COLUMN_NAME, studly_case($col->COLUMN_NAME));
+            if ($col->DATA_TYPE == 'enum') {
+                $enum = str_replace(['enum(', ')', '\''], '', $col->COLUMN_TYPE);
+                $value = explode(',', $enum);
+                $value = array_combine($value, $value);
+            }
+
+            $label = title_case(str_replace('_', ' ', $col->COLUMN_NAME));
+
+            $field = $field::create($col->COLUMN_NAME, $col->COLUMN_COMMENT ?: $label, $value);
 
             if ($col->CHARACTER_MAXIMUM_LENGTH > 0) {
                 $field->addAttribute('maxlength', $col->CHARACTER_MAXIMUM_LENGTH);
                 $field->addRule("max:{$col->CHARACTER_MAXIMUM_LENGTH}|");
             }
 
-            if ($col->IS_NULLABLE == 'NO') {
-                $field->addRule('required|');
+            if ($col->IS_NULLABLE == 'NO' && $col->COLUMN_NAME != $model->getPrimaryKey()) {
+                $field->addRule('required|')
+                    ->setLabelRequired();
             }
 
             if (strpos($col->COLUMN_NAME, 'email') !== false) {
@@ -152,6 +175,10 @@ class FormViewLaravel extends FormView
     {
         $this->action = $action ?: str_replace(['/salvar', '/store'], '', $this->action);
         $this->setMethod('GET');
+
+        foreach ($this->fields as $field) {
+            $field->setLabelRequired(false);
+        }
 
         $this->submitSave = ButtonField::create('submit', '', ' Pesquisar')
             ->addAttribute('class', 'btn btn-default fa fa-search')
