@@ -19,5 +19,5 @@
         "Igorwanbarros\\Php2HtmlLaravel\\": "src/"
       }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "stable"
 }
