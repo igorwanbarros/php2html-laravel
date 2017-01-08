@@ -18,5 +18,10 @@
       "psr-4": {
         "Igorwanbarros\\Php2HtmlLaravel\\": "src/"
       }
-  }
+  },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "beta-v.0.1"
+        }
+    }
 }
