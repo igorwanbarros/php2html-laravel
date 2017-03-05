@@ -191,11 +191,16 @@ class FormViewLaravel extends FormView
     public function render($template = null)
     {
         if ($this->submitSave) {
+            $attributes = ButtonField::getPersonalizations();
+            $class = isset($attributes['class'])
+                ? $attributes['class']
+                : 'btn btn-success fa fa-save';
+
             $submitSave = $this->submitSave instanceof ButtonField
                 ? $this->submitSave
                 : ButtonField::create('submit', 'Salvar', ' Salvar')
                     ->setType('submit')
-                    ->addAttribute('class', 'btn btn-success fa fa-save');
+                    ->addAttribute('class', $class);
 
             $this->addField($submitSave);
         }
