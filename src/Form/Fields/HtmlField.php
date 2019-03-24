@@ -6,5 +6,5 @@ use Igorwanbarros\Php2Html\Form\Fields\Html;
 
 class HtmlField extends Html
 {
-
+    protected $type = 'html';
 }
