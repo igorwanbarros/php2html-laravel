@@ -180,8 +180,8 @@ class FormViewLaravel extends FormView
             $field->setLabelRequired(false);
         }
 
-        $this->submitSave = ButtonField::create('submit', '', ' Pesquisar')
-            ->addAttribute('class', 'btn btn-default fa fa-search')
+        $this->submitSave = ButtonField::create('submit', '', '<i class="fa fa-search"></i> Pesquisar')
+            ->addAttribute('class', 'btn btn-default')
             ->setType('submit');
 
         return $this;
