@@ -5,10 +5,10 @@ $url = $queryString ? "?{$queryString}&" : '?';
 ?>
 
 <?php if ($paginator->lastPage() > 1): ?>
-<div class="text-center">
+<div class="row">
     <ul class="pagination">
-        <li class="<?php echo ($paginator->currentPage() == 1) ? 'disabled' : '' ?>">
-            <a href="<?php echo $url . "page=1" ?>">
+        <li class="page-item <?php echo ($paginator->currentPage() == 1) ? 'disabled' : '' ?>">
+            <a href="<?php echo $url . "page=1" ?>" class="page-link">
                 <i class="fa fa-angle-left"></i>
             </a>
         </li>
@@ -26,13 +26,13 @@ $url = $queryString ? "?{$queryString}&" : '?';
         }
         ?>
         <?php if ($from < $i && $i < $to): ?>
-        <li class="<?php echo ($paginator->currentPage() == $i) ? 'active' : '' ?>">
-            <a href="<?php echo $url . "page={$i}" ?>"><?php echo $i ?></a>
+        <li class="page-item <?php echo ($paginator->currentPage() == $i) ? 'active' : '' ?>">
+            <a href="<?php echo $url . "page={$i}" ?>" class="page-link"><?php echo $i ?></a>
         </li>
         <?php endif;?>
     <?php endfor;?>
-        <li class="<?php echo ($paginator->currentPage() == $paginator->lastPage()) ? 'disabled' : '' ?>">
-            <a href="<?php echo $url . "page={$paginator->lastPage()}" ?>">
+        <li class="page-item <?php echo ($paginator->currentPage() == $paginator->lastPage()) ? 'disabled' : '' ?>">
+            <a href="<?php echo $url . "page={$paginator->lastPage()}" ?>" class="page-link">
                 <i class="fa fa-angle-right"></i>
             </a>
         </li>
