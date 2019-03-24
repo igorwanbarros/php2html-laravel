@@ -24,7 +24,7 @@ class TableViewLaravel extends TableView
 
     public function render($template = null)
     {
-        $this->collection = $this->collection->paginate($this->paginate);
+        //$this->collection = $this->collection->paginate($this->paginate);
         $paginator = new TablePagination($this->collection);
 
         $this->setPaginator($paginator->render());
