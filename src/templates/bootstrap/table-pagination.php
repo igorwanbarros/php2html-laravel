@@ -1,7 +1,7 @@
 <?php
 $link_limit = 8;
 $queryString = app('request')->getQueryString();
-$url = $queryString ? "?{$queryString}&" : '?';
+$url = url($baseUrl . ($queryString ? "?{$queryString}&" : '?'));
 ?>
 
 <?php if ($paginator->lastPage() > 1): ?>
