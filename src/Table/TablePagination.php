@@ -11,6 +11,8 @@ class TablePagination extends ViewAbstract
 
     protected $collection;
 
+    protected $url;
+
 
     public function __construct($collection)
     {
@@ -21,7 +23,7 @@ class TablePagination extends ViewAbstract
 
     public function getVars()
     {
-        return ['paginator' => $this->collection];
+        return ['paginator' => $this->collection, 'baseUrl' => $this->getUrl()];
     }
 
 
@@ -34,6 +36,26 @@ class TablePagination extends ViewAbstract
     public function setCollection($collection)
     {
         $this->collection = $collection;
+        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+
+    /**
+     * @param $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
         return $this;
     }
 }
