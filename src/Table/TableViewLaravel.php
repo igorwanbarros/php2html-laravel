@@ -10,6 +10,8 @@ class TableViewLaravel extends TableView
 
     protected $paginate = 10;
 
+    protected $urlPaginator;
+
 
     public function __construct(array $headers, $collection = null)
     {
@@ -26,6 +28,7 @@ class TableViewLaravel extends TableView
     {
         //$this->collection = $this->collection->paginate($this->paginate);
         $paginator = new TablePagination($this->collection);
+        $paginator->setUrl($this->getUrlPaginator());
 
         $this->setPaginator($paginator->render());
 
@@ -42,6 +45,26 @@ class TableViewLaravel extends TableView
     public function setPaginate($paginate)
     {
         $this->paginate = $paginate;
+        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getUrlPaginator()
+    {
+        return $this->urlPaginator;
+    }
+
+
+    /**
+     * @param $urlPaginator
+     * @return $this
+     */
+    public function setUrlPaginator($urlPaginator)
+    {
+        $this->urlPaginator = $urlPaginator;
         return $this;
     }
 }
