@@ -1,6 +1,6 @@
 <?php
 $link_limit = 8;
-$queryString = app('request')->getQueryString();
+$queryString = http_build_query(app('request')->except('page'));
 $url = url($baseUrl . ($queryString ? "?{$queryString}&" : '?'));
 ?>
 
